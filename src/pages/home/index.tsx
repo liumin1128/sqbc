@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import BussinessCard from '@/components/BussinessCard';
+import CircularProgress, { CircularProgressProps } from '@mui/material/CircularProgress';
 import {
   uploadFile,
   xlsx2Json,
@@ -17,6 +18,34 @@ import { domRender } from '@/utils/react';
 import Typography from '@mui/material/Typography';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+
+function CircularProgressWithLabel(
+  props: CircularProgressProps & { value: number },
+) {
+  return (
+    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+      <CircularProgress variant="determinate" {...props} />
+      <Box
+        sx={{
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          position: 'absolute',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Typography
+          variant="caption"
+          component="div"
+          color="text.secondary"
+        >{`${Math.round(props.value)}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
 
 const renderCanvas = async (render, filename) => {
   const id = randomString();
@@ -43,6 +72,7 @@ const renderCanvas = async (render, filename) => {
 
 function App() {
   const [current, setCurrent] = useState(0);
+  const [percent, setPercent] = useState(0);
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -51,21 +81,20 @@ function App() {
     const enData = formatData(list[current], 'EN');
     const cnData = formatData(list[current], 'CN');
 
-    await renderCanvas(() => {
-      return (
-        <div>
-          <BussinessCard data={enData} />
-        </div>
-      );
-    }, `${enData.title || enData.name || randomString()}.png`);
 
-    await renderCanvas(() => {
-      return (
-        <div>
-          <BussinessCard data={cnData} />
-        </div>
-      );
-    }, `${cnData.title || cnData.name || randomString()}.png`);
+    await renderCanvas(
+      () => <BussinessCard data={enData} />,
+      `${enData.title || enData.name || randomString()}.png`,
+    );
+
+    setPercent(((current * 3 + 1) / (list.length * 3)) * 100);
+
+    await renderCanvas(
+      () => <BussinessCard data={cnData} />,
+      `${cnData.title || cnData.name || randomString()}.png`,
+    );
+
+    setPercent(((current * 3 + 2) / (list.length * 3)) * 100);
 
     await renderCanvas(() => {
       return (
@@ -77,7 +106,7 @@ function App() {
       );
     }, `${enData.name || cnData.name || randomString()}.png`);
 
-    console.log(current, list);
+    setPercent(((current * 3 + 3) / (list.length * 3)) * 100);
 
     const next = current + 1;
     if (next < list.length) {
@@ -86,12 +115,14 @@ function App() {
   };
 
   const handleReset = async () => {
+    await sleep(1000)
+    setPercent(0)
   };
 
   const handleUpload = async () => {
-    await handleReset();
     const file = await uploadFile();
     const json = await xlsx2Json(file);
+    setPercent(1);
     await handleCreate(0, json);
     await handleReset();
   };
@@ -160,14 +191,18 @@ function App() {
 
         <Typography>浏览器可能会弹窗是否允许下载文件，请点击允许。</Typography>
 
-        <Box>
-          <Button size="large" onClick={handleUpload} variant="contained">
+        <Stack direction="row" spacing={2}>
+          <Button disabled={percent !== 0} size="large" onClick={handleUpload} variant="contained">
             点击上传模版文件
           </Button>
-        </Box>
+          {percent !== 0 && <CircularProgressWithLabel value={percent} />}
+        </Stack>
       </Stack>
     </Container>
   );
 }
+
+
+
 
 export default App;
