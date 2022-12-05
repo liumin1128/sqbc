@@ -83,7 +83,7 @@ export function formatData(i: any, language = 'CN'): Person {
 
 export const getCanvas = async (str) => {
   const canvas = await html2canvas(document.querySelector(`#${str}`), {
-    scale:window.devicePixelRatio * 2,
+    scale:window.devicePixelRatio,
     dpi: 300,
   });
   return canvas;
