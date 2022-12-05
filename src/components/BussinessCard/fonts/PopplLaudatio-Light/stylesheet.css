@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'PopplLaudatio-Light';
+    src: url('PopplLaudatio-Light.woff2') format('woff2'),
+        url('PopplLaudatio-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+

@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'HYZhongHei-J';
+    src: url('HYZhongHei-J.woff2') format('woff2'),
+        url('HYZhongHei-J.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+

@@ -1,0 +1,104 @@
+@import './fonts/HYZhongHei-J/stylesheet.css';
+@import './fonts/HYZhongJianHeiJ/stylesheet.css';
+@import './fonts/PopplLaudatio-Light/stylesheet.css';
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.App {
+  background-color: #fff;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  width: 1064px;
+  height: 604px;
+  position: relative;
+  border: 1px #ccc solid;
+}
+
+.text {
+  font-family: "PopplLaudatio-Light", "HYZhongJianHeiJ", serif;
+  position: absolute;
+  left: 60px;
+  bottom: 56px;
+  padding: 0;
+  margin: 0;
+  color: #013378;
+  line-height: 1.20;
+}
+
+.text .name {
+  font-family: "PopplLaudatio-Light", "HYZhongHei-J", serif;
+  font-weight: 300;
+  font-size: 34px;
+  letter-spacing: -0.68px;
+}
+
+.text .position {
+  font-family: "PopplLaudatio-Light", "HYZhongJianHeiJ", serif;
+  font-size: 24px;
+  margin: 4px 0;
+}
+
+.text .info {
+  font-family: "PopplLaudatio-Light", "HYZhongJianHeiJ", serif;
+  font-size: 28px;
+  color: #013378;
+  font-weight: 100;
+  letter-spacing: 0.04px;
+}
+
+
+
+.logo {
+  position: absolute;
+  right: 60px;
+  top: 56px;
+  width: 590px;
+  height: 200px;
+  background-image: url("./logo.png");
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+}
+
+.qrcode {
+  position: absolute;
+  right: 60px;
+  bottom: 56px;
+  width: 180px;
+  height: 180px;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+
+  /*bottom:100px;*/
+
+}
+
+.EN {
+  /*background-image: url(./bg_EN.jpg);*/
+}
+
+.CN {
+  /*background-image: url(./bg_CN.jpg);*/
+}
+
+.CN .text .name {
+  font-size: 36px;
+}
+
+.CN .text .position {
+  font-size: 26px;
+}
+
+.CN .text .info {
+  font-size: 30px;
+}
+
+.CN .qrcode{
+  background-image: url(./qrcode1.jpg);
+}
+
+.EN .qrcode{
+  background-image: url(./qrcode2.png);
+}
