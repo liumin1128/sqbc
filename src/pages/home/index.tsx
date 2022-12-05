@@ -3,13 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
-import CardMedia from '@mui/material/CardMedia';
-import Snackbar from '@mui/material/Snackbar';
-import LinearProgress from '@mui/material/LinearProgress';
-// import { makeStyles } from '@mui/material/styles';
-import image from '@/assets/images/undraw_online_cv_qy9w.svg';
 import BussinessCard from '@/components/BussinessCard';
-import Steps from '@/components/Steps';
 import {
   uploadFile,
   xlsx2Json,
@@ -21,42 +15,12 @@ import {
 } from '@/utils/common';
 import { domRender } from '@/utils/react';
 import Typography from '@mui/material/Typography';
-// import {
-//   sentData2Electron,
-//   getDownloadPathFromElectron,
-// } from './utils/electron';
-// import './App.css';
-
-// const useStyles = makeStyles({
-//   media: {
-//     paddingTop: '60%',
-//     backgroundSize: '60%',
-//     backgroundColor: '#789',
-//   },
-//   template: {
-//     marginTop: 12,
-//     textDecoration: 'none',
-//     color: '#789',
-//   },
-//   root: {
-//     minWidth: 275,
-//   },
-//   bullet: {
-//     display: 'inline-block',
-//     margin: '0 2px',
-//     transform: 'scale(0.8)',
-//   },
-//   title: {
-//     fontSize: 14,
-//   },
-//   pos: {
-//     marginBottom: 12,
-//   },
-// });
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 const renderCanvas = async (render, filename) => {
   const id = randomString();
-  const { destory } = domRender(() => {
+  const { destroy } = domRender(() => {
     return (
       <div
         id={id}
@@ -73,33 +37,12 @@ const renderCanvas = async (render, filename) => {
   await sleep(300);
   const canvas = await getCanvas(id);
   await downLoadImage(canvas, filename);
-  destory();
+  destroy();
   await sleep(300);
 };
 
-// const renderCard = async (data, path) => {
-//   const id = randomString();
-//   const { destory } = domRender(() => {
-//     return (
-//       <div id={id} className="hide">
-//         <BussinessCard data={data} />
-//         <BussinessCard data={data} />
-//       </div>
-//     );
-//   });
-//   await sleep(300);
-//   const canvas = await getCanvas(id);
-//   // downLoadImage(canvas, (data.title || data.name) + ".png");
-//   await sentData2Electron(canvas, data, path);
-//   destory();
-
-//   await sleep(300);
-// };
-
 function App() {
-  // const classes = useStyles();
-  const [progress, setProgress] = useState(0);
-  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [current, setCurrent] = useState(0);
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -143,33 +86,38 @@ function App() {
   };
 
   const handleReset = async () => {
-    setProgress(0);
   };
 
   const handleUpload = async () => {
     await handleReset();
     const file = await uploadFile();
     const json = await xlsx2Json(file);
-    // @ts-ignore
     await handleCreate(0, json);
     await handleReset();
   };
 
-  const persent = progress === 0 ? 0 : (progress / (list.length * 3)) * 100;
+  const handleChange = (e, v: number) => {
+    setCurrent(v);
+  };
 
   return (
-    <>
-      <Container>
-        <Stack spacing={2} sx={{ py :2 }}>
+    <Container>
+      <Stack spacing={2} sx={{ py: 4 }}>
+        <Typography variant="h3">电子名片生成工具</Typography>
 
-          <Typography variant="h3">
-            电子名片生成工具
-          </Typography>
 
-          <Typography>
-            第一次打开页面需要加载字体文件，请等待下面的示例显示完全正常再上传文件模版
-          </Typography>
+        <Tabs
+          value={current}
+          onChange={handleChange}
+          aria-label="basic tabs example"
+          textColor="secondary"
+          indicatorColor="secondary"
+        >
+          <Tab label="CHINESE" id="cn" />
+          <Tab label="ENGLISH" id="en" />
+        </Tabs>
 
+        {current === 0 && (
           <BussinessCard
             data={{
               address_first_line: '中国北京朝阳区建国门外大街2号',
@@ -185,53 +133,40 @@ function App() {
               title: 'MEIMEI HAN CN',
             }}
           />
+        )}
 
-          <Box>
-            <Button onClick={handleUpload} variant="contained">
-              点击上传模版文件
-            </Button>
-          </Box>
-        </Stack>
+        {current === 1 && (
+          <BussinessCard
+            data={{
+              address_first_line:
+                'Unit 4303, 43rd Floor, Beijing Yin Tai Center Tower C,',
+              address_second_line:
+                'No.2, Jian Guo Men Wai Avenue 2, Beijing 100022 China',
+              email: 'Email: meimei_han@singaporeair.com.sg',
+              fax: 'Fax: (8610) 8513 1790',
+              language: 'EN',
+              mobile: 'Mobile: (86) 186 1234 4567',
+              name: 'MEIMEI HAN',
+              position: 'HUMAN RESOURCES / ADMINISTRATION ASSISTANT',
+              telephone: 'Tel: (8610) 1234 5678',
+              title: 'MEIMEI HAN EN',
+            }}
+          />
+        )}
 
+        <Typography>
+          第一次打开需要加载字体文件，请等待上面的示例显示完全正常再上传文件模版。
+        </Typography>
 
+        <Typography>浏览器可能会弹窗是否允许下载文件，请点击允许。</Typography>
 
-      </Container>
-
-      {/*
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        open={snackbarVisible}
-        autoHideDuration={6000}
-        onClose={() => {
-          setSnackbarVisible(false);
-        }}
-        message="All Done"
-      />
-       */}
-
-
-      {/*
-      <BussinessCard
-        data={{
-          address_first_line:
-            'Unit 4303, 43rd Floor, Beijing Yin Tai Center Tower C,',
-          address_second_line:
-            'No.2, Jian Guo Men Wai Avenue 2, Beijing 100022 China',
-          email: 'Email: meimei_han@singaporeair.com.sg',
-          fax: 'Fax: (8610) 8513 1790',
-          language: 'EN',
-          mobile: 'Mobile: (86) 186 1234 4567',
-          name: 'MEIMEI HAN',
-          position: 'HUMAN RESOURCES / ADMINISTRATION ASSISTANT',
-          telephone: 'Tel: (8610) 1234 5678',
-          title: 'MEIMEI HAN EN',
-        }}
-      />
-            */}
-    </>
+        <Box>
+          <Button size="large" onClick={handleUpload} variant="contained">
+            点击上传模版文件
+          </Button>
+        </Box>
+      </Stack>
+    </Container>
   );
 }
 

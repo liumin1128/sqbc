@@ -1,20 +1,19 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 
 export function domRender(Component: React.ElementType) {
   const element = document.createElement('div');
   document.body.appendChild(element);
-  function destory() {
-      const unmountResult = ReactDOM.findDOMNode(element) // eslint-disable-line
-    if (unmountResult && element.parentNode) {
-      element.parentNode.removeChild(element);
+
+  const destroy = () => {
+    if (element) {
+      document.body.removeChild(element);
     }
-  }
+  };
 
-  ReactDOM.render(
-    <Component destory={() => destory()} document={document} />,
-    element,
-  );
+  const root = ReactDOM.createRoot(element);
 
-  return { destory, ref: element };
+  root.render(<Component destroy={destroy} document={document} />);
+
+  return { destroy, ref: element };
 }
